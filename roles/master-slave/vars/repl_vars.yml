@@ -1,0 +1,10 @@
+---
+mysql_repl_master: '172.31.21.187'
+mysql_repl_userpriv: '*.*:ALL'
+mysql_repl_password: 'Repl@1234'
+mysql_repl_userhost: '172.31.22.2'
+mysql_repl_username: 'repl_user'
+mysql_slave_username: 'root'
+mysql_server_id: 2
+mysql_bin_file: 'binlog.000024'
+mysql_log_pos: 454

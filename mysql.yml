@@ -1,0 +1,2 @@
+- roles:
+    - { role: /home/ec2-user/replication-role }

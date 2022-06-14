@@ -1,0 +1,77 @@
+---
+- name: Get MySQL version.
+  command: 'mysql --version'
+  register: mysql_cli_version
+  changed_when: false
+  check_mode: false 
+
+- debug: 
+    var: mysql_cli_version
+
+- name: Copy my.cnf global MySQL configuration.
+  template:
+    src: my.cnf.j2
+    dest: "{{ mysql_config_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: "{{ overwrite_global_mycnf }}"
+  become: true
+  notify: restart mysql
+
+- name: Verify mysql include directory exists.
+  file:
+    path: "{{ mysql_config_include_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  become: true
+
+- name: Create datadir if it does not exist
+  file:
+    path: "{{ mysql_datadir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0755
+    setype: mysqld_db_t
+  become: true 
+
+- name: Create error log file (if configured).
+  command: "touch {{ mysql_log_error }}"
+  args:
+    creates: "{{ mysql_log_error }}"
+    warn: false
+  tags: ['skip_ansible_galaxy']
+  become: true 
+  register: output
+
+- debug:
+    var: output
+
+- name: Set ownership on error log file (if configured).
+  file:
+    path: "{{ mysql_log_error }}"
+    state: file
+    owner: mysql
+    group: "{{ mysql_log_file_group }}"
+    mode: 0640
+  become: true
+
+- name: Ensure MySQL is enabled
+  command: systemctl enable mysqld
+  become: true
+
+- name: Ensure MySQL is started .
+  service: "name={{ mysql_daemon }} state=started "
+  register: mysql_service_configuration
+  become: true 
+
+  #- name: Ensure replication user exists on master
+  #shell: mysql -u root -BNe " create user '"{{ mysql_repl_username }}"'@'"{{ mysql_repl_userhost }}"' IDENTIFIED BY '"{{ mysql_repl_password }}" ' " 
+  # register: user_status
+
+  #- debug:
+  #  var: user_status
+ 

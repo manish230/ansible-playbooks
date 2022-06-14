@@ -1,0 +1,23 @@
+---
+
+- name: check replication on slave 
+  shell: mysql -u root -BNe " show slave status;"
+  register: slave_status
+
+
+- name: stop replication on slave
+  shell: mysql -u root -BNe " stop slave ;"
+  register: stop_slave_status
+
+- name: change replication master
+  shell: mysql -u root -BNe " CHANGE MASTER TO MASTER_HOST='"{{ mysql_repl_master }}"' , MASTER_USER='"{{ mysql_repl_username }}"' ,MASTER_PASSWORD='"{{ mysql_repl_password }}"' ,MASTER_LOG_FILE='"{{ mysql_bin_file }}"' ,MASTER_LOG_POS={{ mysql_log_pos}};"
+  register: change_master_status
+
+- debug:
+    var: change_master_status
+
+- name: start replication on slave
+  shell: mysql -u root -BNe " start slave ;"
+  register: start_slave_status
+- debug: 
+    var: stop_slave_status

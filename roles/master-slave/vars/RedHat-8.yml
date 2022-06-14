@@ -1,0 +1,23 @@
+---
+__mysql_daemon: mysqld
+__mysql_packages:
+  - mysql
+  - mysql-server
+  - python3-PyMySQL
+__mysql_log_error: /var/log/mysql/mysqld.log
+__mysql_root_username: root
+__root_password: R@ot@1234
+__mysql_root_home: /root
+__mysql_user_home: /etc/my.cnf.d
+__mysql_user_name: mysql
+__mysql_user_password: R@ot@1234
+__mysql_user_priv: '*.*:ALL'
+__mysql_user_host: 172.31.21.187
+__mysql_syslog_tag: mysql
+__mysql_pid_file: /run/mysqld/mysqld.pid
+__mysql_config_file: /etc/my.cnf.d/mysql-server.cnf
+__mysql_config_include_dir: /etc/my.cnf.d
+__mysql_socket: /var/lib/mysql/mysql.sock
+# The entries controlled by this value should not be used with MariaDB >= 10.2.2
+# See https://github.com/frappe/bench/issues/681#issuecomment-398984706
+__mysql_supports_innodb_large_prefix: false
